@@ -159,7 +159,6 @@ if (body != null) {
 }
 
 function mute() {
-
   if (bgsound.isPlaying()) {
 
     bgsound.stop();
