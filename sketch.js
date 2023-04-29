@@ -11,19 +11,21 @@ let engine;
 let world;
 
 var ground;
-var rope;
+var rope, rope2, rope3;
 var fruit;
-var link;
+var link, link2, link3;
 
 var bg;
 var rabbit;
 var melon;
 var bunny;
-var button;
+var button, button2, button3;
 
 var blink, eat, sad;
 
 var balloonsound, bgsound, eatsound, losesound, balloon, cutsound, mutebtn;
+
+var canw, canh;
 
 function preload() {
   bg = loadImage("images/background.png");
@@ -52,6 +54,27 @@ function preload() {
 
 function setup() 
 {
+
+var ismobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+if (ismobile) {
+
+  canw = displayWidth;
+  canh = displayHeight;
+  
+  createCanvas(displayWidth+80, displayHeight);
+}
+
+else {
+
+canw = windowWidth;
+canh = windowHeight;
+
+  createCanvas(windowWidth, windowHeight);
+}
+console.log(ismobile);
+// createCanvas(canw, canh);
+
   createCanvas(500,700);
   engine = Engine.create();
   world = engine.world;
@@ -65,15 +88,19 @@ function setup()
   eat.frameDelay = 8;
   sad.frameDelay = 8;
  
-ground = new Ground(250, 690, 500, 20);
-rope = new Rope(6, {x:250, y:30});
+ground = new Ground(250, canh, 500, 20);
+rope = new Rope(8, {x:40, y:30});
+rope2 = new Rope(7, {x:370, y:40});
+rope3 = new Rope(4, {x:400, y:225});
 var fruitop = {density:0.001};
 
 fruit = Bodies.circle(250, 250, 25, fruitop);
 Matter.Composite.add(rope.body, fruit);
 link = new Link(rope, fruit);
+link2 = new Link(rope2, fruit);
+link3 = new Link(rope3,fruit);
 
-bunny = createSprite(420, 627, 100, 100);
+bunny = createSprite(100, canh-80, 100, 100);
 bunny.scale = 0.2;
 
 //adicionar as animações do coelho
@@ -83,35 +110,47 @@ bunny.addAnimation("crying", sad);
 bunny.changeAnimation("blinking");
 
 button = createImg("images/cut_btn.png");
-button.position(220, 20);
+button.position(20, 30);
 button.size(50, 50);
 button.mouseClicked(drop);
+
+button2 = createImg("images/cut_btn.png");
+button2.position(330, 35);
+button2.size(50, 50);
+button2.mouseClicked(drop2);
+
+button3 = createImg("images/cut_btn.png");
+button3.position(360, 200);
+button3.size(50, 50);
+button3.mouseClicked(drop3);
 
 mutebtn = createImg("images/mute.png");
 mutebtn.position(450, 20);
 mutebtn.size(40, 40);
 mutebtn.mouseClicked(mute);
 
-  balloon = createImg("images/balloon.png");
-  balloon.position(30, 230);
-  balloon.size(150, 100);
-  balloon.mouseClicked(airballon);
+  // balloon = createImg("images/balloon.png");
+  // balloon.position(30, 230);
+  // balloon.size(150, 100);
+  // balloon.mouseClicked(airballon);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50)
-  imageMode(CENTER);
+  // imageMode(CENTER);
 }
 
 
 function draw() 
 {
   background(51);
-  image(bg, width/2, height/2, 500, 700);
+  image(bg, 0, 0, displayWidth+80, displayHeight);
   Engine.update(engine);
 
    ground.show();
   rope.show();
+  rope2.show();
+  rope3.show();
   if (fruit != null) {
   image(melon, fruit.position.x, fruit.position.y, 80, 80);
   }
@@ -138,6 +177,20 @@ function drop() {
   rope.break();
   link.separar();
   link = null;
+}
+
+function drop2() {
+  cutsound.play();
+  rope2.break();
+  link2.separar();
+  link2 = null;
+}
+
+function drop3() {
+  cutsound.play();
+  rope3.break();
+  link3.separar();
+  link3 = null;
 }
 
 function collide(body, sprite) {
