@@ -152,7 +152,7 @@ function draw()
   rope2.show();
   rope3.show();
   if (fruit != null) {
-  image(melon, fruit.position.x, fruit.position.y, 80, 80);
+  image(melon, fruit.position.x-30, fruit.position.y-30, 80, 80);
   }
 
   if (collide(fruit, bunny) == true) {
